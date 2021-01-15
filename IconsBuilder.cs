@@ -209,7 +209,7 @@ namespace IconsBuilder
                 if (entity.League == LeagueType.Delirium)
                     return new DeliriumIcon(entity, Settings, modIcons);
 
-                return new MonsterIcon(entity, Settings, modIcons);
+                return new MonsterIcon(entity, GameController, Settings, modIcons);
             }
 
             //NPC

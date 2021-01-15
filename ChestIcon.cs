@@ -358,25 +358,10 @@ namespace IconsBuilder
                     Text = Entity.Path.Replace("Metadata/Chests/Labyrinth/Labyrinth", "");
                     MainTexture.Color = Color.ForestGreen;
                     break;
-                    /*
                 case ChestType.Heist:
-                        //DebugWindow.LogMsg(Entity.Path + " [ChestType.Fossil]");
-                        //MainTexture.UV = SpriteHelper.GetUV(MyMapIconsIndex.Divination);
-                        Text = settings.HeistText.Value ? Entity.Path.Replace("Metadata/Chests/LeagueHeist/HeistChest", "").Replace("Thug", "")
-                            .Replace("Science", "").Replace("Military", "").Replace("Robot", "")
-                            .Replace("Secondary", "") : ""; ;
-
-                    //MainTexture.Color = Color.HotPink;
-                    break;
-                    */
-                case ChestType.Heist:
-                        //DebugWindow.LogMsg(Entity.Path + " [ChestType.Fossil]");
-                        //MainTexture.UV = SpriteHelper.GetUV(MyMapIconsIndex.Divination);
-                        Text = Entity.Path.Replace("Metadata/Chests/LeagueHeist/HeistChest", "").Replace("Thug", "")
-                            .Replace("Science", "").Replace("Military", "").Replace("Robot", "")
-                            .Replace("Secondary", "").Replace("RewardRoom", "");
-
-                    //MainTexture.Color = Color.HotPink;
+                    Text = Entity.Path.Replace("Metadata/Chests/LeagueHeist/HeistChest", "").Replace("Thug", "")
+                        .Replace("Science", "").Replace("Military", "").Replace("Robot", "")
+                        .Replace("Secondary", "").Replace("RewardRoom", "");
                     break;
                 case ChestType.Synthesis:
                     Priority = IconPriority.Critical;
