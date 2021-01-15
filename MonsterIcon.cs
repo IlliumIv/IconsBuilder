@@ -15,7 +15,7 @@ namespace IconsBuilder
 {
     public class MonsterIcon : BaseIcon
     {
-        public MonsterIcon(Entity entity, IconsBuilderSettings settings, Dictionary<string, Size2> modIcons)
+        public MonsterIcon(Entity entity, GameController gameController,  IconsBuilderSettings settings, Dictionary<string, Size2> modIcons)
             : base(entity, settings)
         {
             Update(entity, settings, modIcons);
