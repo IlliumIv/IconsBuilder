@@ -197,6 +197,7 @@ namespace IconsBuilder
 
         private BaseIcon EntityAddedLogic(Entity entity)
         {
+            if (entity == null) return null;
             if (SkipEntity(entity)) return null;
 
             //Monsters
@@ -242,9 +243,10 @@ namespace IconsBuilder
             if (entity.HasComponent<Transitionable>() && entity.HasComponent<MinimapIcon>())
             {
                 //Mission marker
-                if (entity.Path.Equals("Metadata/MiscellaneousObjects/MissionMarker", StringComparison.Ordinal) ||
-                    (entity.HasComponent<MinimapIcon>() && entity.GetComponent<MinimapIcon>().Name.Equals("MissionTarget", StringComparison.Ordinal)))
-                    return new MissionMarkerIcon(entity, GameController, Settings);
+                if (entity.Path != null)
+                    if (entity.Path.Equals("Metadata/MiscellaneousObjects/MissionMarker", StringComparison.Ordinal) ||
+                        (entity.HasComponent<MinimapIcon>() && entity.GetComponent<MinimapIcon>().Name.Equals("MissionTarget", StringComparison.Ordinal)))
+                        return new MissionMarkerIcon(entity, GameController, Settings);
 
                 return new MiscIcon(entity, GameController, Settings);
             }
