@@ -200,68 +200,76 @@ namespace IconsBuilder
             if (entity == null) return null;
             if (SkipEntity(entity)) return null;
 
-            //Monsters
-            if (entity.Type == EntityType.Monster)
+            try
             {
-                if (!entity.IsAlive) return null;
 
-                if (entity.League == LeagueType.Legion)
-                    return new LegionIcon(entity, Settings, modIcons);
-                if (entity.League == LeagueType.Delirium)
-                    return new DeliriumIcon(entity, Settings, modIcons);
+                //Monsters
+                if (entity.Type == EntityType.Monster)
+                {
+                    if (!entity.IsAlive) return null;
 
-                return new MonsterIcon(entity, GameController, Settings, modIcons);
+                    if (entity.League == LeagueType.Legion)
+                        return new LegionIcon(entity, Settings, modIcons);
+                    if (entity.League == LeagueType.Delirium)
+                        return new DeliriumIcon(entity, Settings, modIcons);
+
+                    return new MonsterIcon(entity, GameController, Settings, modIcons);
+                }
+
+                //NPC
+                if (entity.Type == EntityType.Npc)
+                    return new NpcIcon(entity, GameController, Settings);
+
+                //Player
+                if (entity.Type == EntityType.Player)
+                {
+                    var rendername = GameController.IngameState.Data.LocalPlayer.GetComponent<Render>()?.Name ?? null;
+                    if (GameController.IngameState.Data.LocalPlayer.Address == entity.Address ||
+                        rendername == null || !(rendername == entity.RenderName)) return null;
+
+                    if (!entity.IsValid) return null;
+                    return new PlayerIcon(entity, GameController, Settings, modIcons);
+                }
+
+                //Chests
+                if (Chests.AnyF(x => x == entity.Type) && !entity.IsOpened && !entity.RenderName.Contains("Curio Display"))
+                    return new ChestIcon(entity, GameController, Settings);
+
+                //Area transition
+                if (entity.Type == EntityType.AreaTransition)
+                    return new MiscIcon(entity, GameController, Settings);
+
+                //Shrine
+                if (entity.HasComponent<Shrine>())
+                    return new ShrineIcon(entity, GameController, Settings);
+
+                if (entity.HasComponent<Transitionable>() && entity.HasComponent<MinimapIcon>())
+                {
+                    //Mission marker
+                    if (entity.Path != null)
+                        if (entity.Path.Equals("Metadata/MiscellaneousObjects/MissionMarker", StringComparison.Ordinal) ||
+                            (entity.HasComponent<MinimapIcon>() && entity.GetComponent<MinimapIcon>().Name.Equals("MissionTarget", StringComparison.Ordinal)))
+                            return new MissionMarkerIcon(entity, GameController, Settings);
+
+                    return new MiscIcon(entity, GameController, Settings);
+                }
+
+                if (entity.HasComponent<MinimapIcon>() && entity.HasComponent<Targetable>() && entity.League != LeagueType.Heist)
+                    return new MiscIcon(entity, GameController, Settings);
+
+                if (entity.Path.Contains("Metadata/Terrain/Leagues/Delve/Objects/EncounterControlObjects/AzuriteEncounterController"))
+                    return new MiscIcon(entity, GameController, Settings);
+
+                //delve paths
+                if (entity.Path.EndsWith("Metadata/Terrain/Leagues/Delve/Objects/DelveLight"))
+                    return new MiscIcon(entity, GameController, Settings);
+
+                if (entity.Type == EntityType.LegionMonolith) return new MiscIcon(entity, GameController, Settings);
             }
-
-            //NPC
-            if (entity.Type == EntityType.Npc)
-                return new NpcIcon(entity, GameController, Settings);
-
-            //Player
-            if (entity.Type == EntityType.Player)
+            catch (NullReferenceException e)
             {
-                var rendername = GameController.IngameState.Data.LocalPlayer.GetComponent<Render>()?.Name ?? null;
-                if (GameController.IngameState.Data.LocalPlayer.Address == entity.Address ||
-                    rendername == null || !(rendername == entity.RenderName)) return null;
-
-                if (!entity.IsValid) return null;
-                return new PlayerIcon(entity, GameController, Settings, modIcons);
+                if (Settings.Debug.Value) LogError($"{e.Message}\n{e.StackTrace}");
             }
-
-            //Chests
-            if (Chests.AnyF(x => x == entity.Type) && !entity.IsOpened  && !entity.RenderName.Contains("Curio Display"))
-                return new ChestIcon(entity, GameController, Settings);
-
-            //Area transition
-            if (entity.Type == EntityType.AreaTransition)
-                return new MiscIcon(entity, GameController, Settings);
-
-            //Shrine
-            if (entity.HasComponent<Shrine>())
-                return new ShrineIcon(entity, GameController, Settings);
-
-            if (entity.HasComponent<Transitionable>() && entity.HasComponent<MinimapIcon>())
-            {
-                //Mission marker
-                if (entity.Path != null)
-                    if (entity.Path.Equals("Metadata/MiscellaneousObjects/MissionMarker", StringComparison.Ordinal) ||
-                        (entity.HasComponent<MinimapIcon>() && entity.GetComponent<MinimapIcon>().Name.Equals("MissionTarget", StringComparison.Ordinal)))
-                        return new MissionMarkerIcon(entity, GameController, Settings);
-
-                return new MiscIcon(entity, GameController, Settings);
-            }
-
-            if (entity.HasComponent<MinimapIcon>() && entity.HasComponent<Targetable>() && entity.League != LeagueType.Heist)
-                return new MiscIcon(entity, GameController, Settings);
-
-            if (entity.Path.Contains("Metadata/Terrain/Leagues/Delve/Objects/EncounterControlObjects/AzuriteEncounterController"))
-                return new MiscIcon(entity, GameController, Settings);
-
-            //delve paths
-            if (entity.Path.EndsWith("Metadata/Terrain/Leagues/Delve/Objects/DelveLight"))
-                return new MiscIcon(entity, GameController, Settings);
-
-            if (entity.Type == EntityType.LegionMonolith) return new MiscIcon(entity, GameController, Settings);
 
             return null;
         }

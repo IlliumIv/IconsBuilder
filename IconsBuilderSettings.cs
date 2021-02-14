@@ -56,6 +56,7 @@ namespace IconsBuilder
         public ToggleNode ShowMagicMonsterName { get; set; } = new ToggleNode(false);
         public ToggleNode ShowRareMonsterName { get; set; } = new ToggleNode(false);
         public ToggleNode ShowUniqueMonsterName { get; set; } = new ToggleNode(false);
+        public ToggleNode Debug { get; set; } = new ToggleNode(false);
         public ToggleNode Enable { get; set; } = new ToggleNode(true);
         
     }
